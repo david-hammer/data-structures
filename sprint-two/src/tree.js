@@ -32,6 +32,12 @@ treeMethods.contains = function(target){
     return ret;
 };
 
+treeMethods.traverse = function(cb, tree){
+  tree = tree || this;
+  cb.call(this, tree.value);
+  for (var i = 0; tree.children && i < tree.children.length; i++)
+    this.traverse(cb, tree.children[i]);
+}
 
 /*
  * Complexity: What is the time complexity of the above functions?

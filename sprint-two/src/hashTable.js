@@ -38,13 +38,13 @@ HashTable.prototype.remove = function(k){
   {
     if (n.key === k)
     {
-      if (prev === null && n.next === null) //beginning of list
+      if (prev === null && n.next === null) // beginning of list
         this._storage.set(i, null);
       else if (prev === null)
-        this._storage.set(i,n.next);
-      else if (n.next === null) // end of list
+        this._storage.set(i, n.next);
+      else if (n.next === null)             // end of list
         prev.next = null;
-      else                      // middle of list
+      else                                  // middle of list
         prev.next = n.next;
 
       return n.value;

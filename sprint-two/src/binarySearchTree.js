@@ -50,6 +50,19 @@ bsPrototype.depthFirstLog = function(cb){
   }
   depthFirst(this);
 };
+
+bsPrototype.breadthFirstLog = function(cb){
+  var queue = [];
+  queue.push(this);
+
+  while (queue.length > 0){
+    cb.call(this,queue.shift());
+    if (tree.left)
+      queue.push(tree.left);
+    if (tree.right)
+      queue.push(tree.right);
+  }
+};
 /*
  * Complexity: What is the time complexity of the above functions?
 

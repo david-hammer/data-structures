@@ -40,7 +40,7 @@ DoublyLinkedList.prototype.addToTail = function(item) {
 DoublyLinkedList.prototype.removeTail = function(item) {
  var ret = null;
  if (this.tail){
-  ret = this.tail;
+  ret = this.tail.value;
   this.tail = this.tail.prev;
   if (this.tail)
     this.tail.next  = null;
@@ -51,7 +51,7 @@ return ret;
 DoublyLinkedList.prototype.removeHead = function(item) {
   var ret = null;
   if (this.head){
-    ret = this.head;
+    ret = this.head.value;
     this.head = this.head.next;
     if (this.head)
       this.head.next = null;

@@ -1,4 +1,4 @@
-//binary tree
+
 var Tree = function(value, parent){
   var newTree = {};
   newTree.value = value;
@@ -44,8 +44,16 @@ treeMethods.traverse = function(cb, tree){
 
 treeMethods.removeFromParent = function() {
   //this.parent.children.remove(this);
+  var parent = this.parent;
+  this.parent = null;
+
+  if (parent){
+    parent.children
+
+  }
 
 
+  return this;
 };
 
 /*

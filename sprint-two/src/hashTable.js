@@ -1,14 +1,21 @@
 //collisions resolved by separate chaining
 //overrides duplicate
 var HashTable = function(){
+  this._count = 0;
   this._limit = 8;
   this._storage = LimitedArray(this._limit);
 };
 
 HashTable.prototype.insert = function(k, v){
 
+  var _Node = function(k,v){
+    this.key = k;
+    this.value = v;
+    this.next = null;
+  };
+
   //resize
-  if (this._numBucketsFull() >= 0.75 * this._limit)
+  if (this._count >= 0.75 * this._limit)
     this._resize(2 * this._limit);
 
   //inefficient way to implement overriding
@@ -26,6 +33,7 @@ HashTable.prototype.insert = function(k, v){
       ;
     n.next = new _Node(k,v);
   }
+  this._count++;
 };
 
 HashTable.prototype.retrieve = function(k){
@@ -43,18 +51,17 @@ HashTable.prototype.retrieve = function(k){
 HashTable.prototype.remove = function(k){
 
     //resize
-  var size = this._numBucketsFull()
-  if (size > 3 && size < 0.25 * this._limit)
-    this._resize(0.5 * this._limit);
+    if (this._limit > 8 && this._count <= 0.25 * this._limit)
+      this._resize(0.5 * this._limit);
 
 
-  var i = getIndexBelowMaxForKey(k, this._limit);
-  var bucket = this._storage.get(i);
-  var prev = null;
-  for (var n = bucket; n; n = n.next)
-  {
-    if (n.key === k)
+    var i = getIndexBelowMaxForKey(k, this._limit);
+    var bucket = this._storage.get(i);
+    var prev = null;
+    for (var n = bucket; n; n = n.next)
     {
+      if (n.key === k)
+      {
       if (prev === null && n.next === null) // beginning of list
         this._storage.set(i, null);
       else if (prev === null)
@@ -63,7 +70,7 @@ HashTable.prototype.remove = function(k){
         prev.next = null;
       else                                  // middle of list
         prev.next = n.next;
-
+      this._count--;
       return n.value;
     }
     prev = n;
@@ -78,7 +85,7 @@ HashTable.prototype._resize = function(newSize) {
   var oldSize = this._limit;
   this._storage = LimitedArray(newSize);
   this._limit = newSize;
-
+  this._count = 0;
   for (var i = 0; i < oldSize; i++)
   {
     var bucket = oldArray.get(i);
@@ -89,14 +96,14 @@ HashTable.prototype._resize = function(newSize) {
   }
 }
 
-HashTable.prototype._numBucketsFull = function() {
-  var count = 0;
-  for (var i = 0; i < this._limit; i++) {
-    if (this._storage.get(i))
-      count++;
-  }
-  return count;
-};
+// HashTable.prototype._numBucketsFull = function() {
+//   var count = 0;
+//   for (var i = 0; i < this._limit; i++) {
+//     if (this._storage.get(i))
+//       count++;
+//   }
+//   return count;
+// };
 
 // HashTable.prototype._enum = function(){
 //   for (var i = 0; i < this._limit; i++)
@@ -109,14 +116,10 @@ HashTable.prototype._numBucketsFull = function() {
 //   }
 // };
 
-var _Node = function(k,v){
-  this.key = k;
-  this.value = v;
-  this.next = null;
-};
+
 
 
 /*
  * Complexity: What is the time complexity of the above functions?
   amortized constant time
- */
+  */

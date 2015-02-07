@@ -44,12 +44,35 @@ BloomFilter.prototype._hash = function(str, max){
   return hash % max;
 };
 
-var testBloomFilter = function() {
-  var filter;
-  for(var t = 0; t < 10000; t++) {
-   filter = new BloomFilter(18,3);
+var testBloomFilter = function(m,k,n) {
+  var filter, i, tests, elem;
+  var count = 0, misses = 0;
 
- }
+  for (var trial = 0; trial < 100; trial++)
+  {
+    filter = new BloomFilter(m,k);
+    tests = [];
+    //populate bloom filter with n items
+    for (i = 0; i < n; i++){
+      elem = Math.random();
+      tests.push(elem);
+      filter.add(elem);
+    }
 
+    for(var t = 0; t < 1000; t++) {
+   // tests
+   var num = Math.random();
+   var test = filter.contains(num);
+
+   if (test)
+    misses++;
+  count++;
+  }
+}
+var error = misses / count;
+var expectedError = Math.pow((1 - Math.exp(-1 * k * n / m)),k);
+console.log('experimental error rate for m='+m+' k='+k+' n='+n+' is approx '+error+'\n');
+console.log('expected error rate for m='+m+' k='+k+' n='+n+' is '+expectedError+ '\n');
+console.log('percent diff = '+(error-expectedError)/expectedError);
 };
 
